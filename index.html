@@ -3,50 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI D&D 獨自跑團產生器</title>
+    <title>邊境紀事 · AI 文字冒險</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="container">
-    <h1>🎲 AI D&D 獨自跑團產生器 (哥布林殺手/自訂世界版)</h1>
-    
-    <!-- 初始自由設定面板 -->
-    <div id="setup-panel" class="panel">
-        <h3>⚔️ 創造你的冒險世界與角色</h3>
-        
-        <label>1. Gemini API 金鑰：</label>
-        <input type="password" id="apiKey" placeholder="請貼上你的 API 金鑰 (AIzaSy...)">
-        <p style="font-size:12px; color:#888; margin-top:-8px; margin-bottom:12px;">※ 金鑰僅在本次遊戲的瀏覽器記憶體中使用，不會寫入 localStorage，也不會上傳至 GitHub。<br>※ 金鑰請至 <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:#6cb4ff;">Google AI Studio</a> 免費申請。</p>
-        
-        <label>2. 想像你的世界觀背景 (自由填寫)：</label>
-        <textarea id="worldSetting" rows="3" placeholder="例如：哥布林殺手小說的世界觀，充滿殘酷、寫實的冒險者公會、陰暗潮濕的哥布林洞穴..."></textarea>
+    <div class="bg-pattern" aria-hidden="true"></div>
 
-        <label>3. 填寫你的初始職業/身份 (自由填寫)：</label>
-        <input type="text" id="playerClass" placeholder="例如：剛註冊的白瓷級冒險者 / 擅長潛行的小鬼殺手 / 魔法學校畢業的白袍神官"></input>
-        
-        <button onclick="startAdventure()" style="background:#28a745;">🎲 擲骰決定初始能力！開團</button>
-    </div>
-
-    <!-- 遊戲主畫面 -->
-    <div id="game-panel" class="panel" style="display:none;">
-        <div class="status-grid">
-            <div style="color:#ff4d4d;">❤️ HP: <span id="hp">???</span></div>
-            <div style="color:#ffcc00;">⚔️ 攻擊修正: +<span id="atk">???</span></div>
-            <div style="color:#28a745;">🛡️ 防禦防護: <span id="def">???</span></div>
-            <div style="color:#00e6ff;">💰 銀幣: <span id="gold">???</span></div>
+    <header class="site-header">
+        <div class="brand">
+            <span class="brand-mark">BC</span>
+            <div>
+                <h1>邊境紀事</h1>
+                <p class="tagline">Border Chronicles · 單人 AI 文字冒險</p>
+            </div>
         </div>
-        
-        <h3>📜 旁白 (地下城主 DM) 敘事</h3>
-        <div id="story-text"></div>
+    </header>
 
-        <h3>🎯 抉擇行動選項</h3>
-        <div id="options-container"></div>
-    </div>
-</div>
+    <main class="app-shell">
 
-<!-- 引入模組檔案 -->
-<script src="js/api.js?v=5"></script>
-<script src="js/system.js?v=5"></script>
-<script src="js/app.js?v=5"></script>
+        <!-- 開局設定 -->
+        <section id="setup-panel" class="card setup-card">
+            <div class="card-head">
+                <span class="step-badge">START</span>
+                <h2>撰寫你的第一章</h2>
+                <p class="card-desc">設定世界與角色，AI 說書人將依你的想像展開旅程。</p>
+            </div>
+
+            <div class="form-block">
+                <label for="apiKey">API 金鑰</label>
+                <input type="password" id="apiKey" placeholder="貼上 Gemini API 金鑰（AIzaSy…）" autocomplete="off">
+                <p class="hint">金鑰僅存於本次遊戲記憶體，不寫入 localStorage。至 <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> 免費申請。</p>
+            </div>
+
+            <div class="form-block">
+                <label for="worldSetting">世界背景</label>
+                <textarea id="worldSetting" rows="4" placeholder="例如：霧氣繚繞的邊境城邦、古代遺跡與盜賊公會並存的破碎大陸…"></textarea>
+            </div>
+
+            <div class="form-block">
+                <label for="playerClass">角色身分</label>
+                <input type="text" id="playerClass" placeholder="例如：見習學者 / 流浪傭兵 / 村莊守夜人">
+            </div>
+
+            <button type="button" class="btn-primary" onclick="startAdventure()">擲骰，踏上旅途</button>
+        </section>
+
+        <!-- 遊戲進行中 -->
+        <section id="game-panel" class="game-layout" hidden>
+
+            <aside class="stat-panel card">
+                <h2 class="stat-title">角色狀態</h2>
+                <ul class="stat-list">
+                    <li class="stat-item stat-hp">
+                        <span class="stat-label">生命</span>
+                        <span class="stat-value" id="hp">—</span>
+                    </li>
+                    <li class="stat-item stat-atk">
+                        <span class="stat-label">攻擊</span>
+                        <span class="stat-value">+<span id="atk">—</span></span>
+                    </li>
+                    <li class="stat-item stat-def">
+                        <span class="stat-label">防禦</span>
+                        <span class="stat-value" id="def">—</span>
+                    </li>
+                    <li class="stat-item stat-gold">
+                        <span class="stat-label">財產</span>
+                        <span class="stat-value"><span id="gold">—</span> G</span>
+                    </li>
+                </ul>
+            </aside>
+
+            <div class="play-panel">
+                <div class="card narrative-card">
+                    <div class="card-head compact">
+                        <span class="step-badge">LOG</span>
+                        <h2>旅途紀錄</h2>
+                    </div>
+                    <div id="story-text" class="story-body"></div>
+                </div>
+
+                <div class="card choices-card">
+                    <div class="card-head compact">
+                        <span class="step-badge">ACT</span>
+                        <h2>下一步</h2>
+                    </div>
+                    <div id="options-container" class="choices-list"></div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>本作品為個人非商業學習專案，與任何付費產品無關。D&D 等商標屬其權利人所有。</p>
+    </footer>
+
+    <script src="js/api.js?v=6"></script>
+    <script src="js/system.js?v=6"></script>
+    <script src="js/app.js?v=6"></script>
 </body>
 </html>

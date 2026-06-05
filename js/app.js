@@ -5,8 +5,8 @@ let sessionApiKey = '';
 // 啟動全新冒險
 async function startAdventure() {
     const apiKey = document.getElementById('apiKey').value.trim();
-    const world = document.getElementById('worldSetting').value.trim() || "標準 D&D 奇幻世界觀";
-    const pClass = document.getElementById('playerClass').value.trim() || "冒險者公會新人";
+    const world = document.getElementById('worldSetting').value.trim() || "霧氣繚繞的邊境奇幻世界";
+    const pClass = document.getElementById('playerClass').value.trim() || "初出茅廬的旅人";
 
     if (!apiKey) { alert('請先輸入你的 Gemini API 金鑰！'); return; }
 
@@ -15,13 +15,12 @@ async function startAdventure() {
     // 【已移除】原本的 localStorage.setItem 安全記憶功能已刪除，網頁不會保留任何金鑰紀錄。
 
     // 切換面板顯示
-    document.getElementById('setup-panel').style.display = 'none';
-    document.getElementById('game-panel').style.display = 'block';
+    document.getElementById('setup-panel').hidden = true;
+    document.getElementById('game-panel').hidden = false;
     
     renderLoading();
 
-    // 建構給 D&D 主機的第一回合 Prompt
-    const firstPrompt = `我創造了一個 D&D 跑團世界觀：【${world}】。我的初始職業/身份是：【${pClass}】。請根據這兩個設定，為我分配合理的初始數值（請在 JSON 的 change 欄位直接填入初始值，例如 hp_change 填入初始血量、atk_change 填入初始攻擊修正等），並生成開場隨機冒險遭遇事件與三個初始行動選項。`;
+      const firstPrompt = `我的世界觀設定：【${world}】。我的角色身分是：【${pClass}】。請根據這兩個設定，為我分配合理的初始數值（請在 JSON 的 change 欄位直接填入初始值，例如 hp_change 填入初始血量、atk_change 填入初始攻擊修正等），並生成開場遭遇事件與三個行動選項。`;
     chatHistory = [{ role: 'user', parts: [{ text: firstPrompt }] }];
     
     playerStatus = { hp: 0, atk: 0, def: 0, gold: 0 };
@@ -69,8 +68,10 @@ async function processTurn(apiKey, isFirstTurn) {
         
         // 判定死亡（HP歸零）
         if (playerStatus.hp <= 0) {
-            document.getElementById('story-text').innerHTML = `💀 <b>【冒險者不幸陣亡】</b>\n\n${gameData.story}\n\n你的生命跡象已消失。在殘酷的世界中，你的名字將被遺忘...`;
-            document.getElementById('options-container').innerHTML = `<button onclick="location.reload()" style="background:#dc3545;">重新投胎，開啟新冒險</button>`;
+            document.getElementById('story-text').innerHTML =
+                `<span class="death-title">旅途終結</span>${gameData.story}\n\n你的故事在此畫下句點，邊境的風仍會繼續吹拂……`;
+            document.getElementById('options-container').innerHTML =
+                `<button class="btn-danger" onclick="location.reload()">重新開始新故事</button>`;
             return;
         }
 
@@ -78,13 +79,15 @@ async function processTurn(apiKey, isFirstTurn) {
         document.getElementById('story-text').innerText = gameData.story;
         
         let optionsHtml = '';
-        gameData.options?.forEach(opt => {
-            optionsHtml += `<button class="option-btn" onclick="selectOption('${opt.replace(/'/g, "\\'")}')">👉 ${opt}</button>`;
+        gameData.options?.forEach((opt, i) => {
+            const letter = String.fromCharCode(65 + i);
+            optionsHtml += `<button class="option-btn" data-index="${letter}" onclick="selectOption('${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
         });
         document.getElementById('options-container').innerHTML = optionsHtml;
         
     } catch (err) {
-        document.getElementById('story-text').innerText = `連線出錯：${err.message}`;
-        document.getElementById('options-container').innerHTML = `<button onclick="location.reload()">重新整理網頁</button>`;
+        document.getElementById('story-text').innerText = `發生錯誤：${err.message}`;
+        document.getElementById('options-container').innerHTML =
+            `<button class="btn-ghost" onclick="location.reload()">重新整理頁面</button>`;
     }
 }
