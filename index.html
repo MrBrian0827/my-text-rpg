@@ -3,56 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自製 AI 文字冒險產生器</title>
-    <style>
-        body { background-color: #121212; color: #e0e0e0; font-family: 'PingFang TC', sans-serif; padding: 20px; line-height: 1.6; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .panel { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #333; }
-        input, select, button { width: 100%; padding: 12px; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 4px; box-sizing: border-box; margin-bottom: 12px; font-size: 16px; }
-        button { background: #007acc; cursor: pointer; font-weight: bold; border: none; transition: 0.2s; }
-        button:hover { background: #005999; }
-        .status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; font-weight: bold; }
-        #story-text { min-height: 15px; overflow-y: auto; white-space: pre-wrap; padding: 15px; background: #050505; border-radius: 4px; border-left: 4px solid #007acc; font-size: 16px; margin-bottom: 20px; }
-        .option-btn { background: #333; text-align: left; border: 1px solid #555; padding: 12px; margin-bottom: 8px; border-radius: 4px; font-size: 15px; }
-        .option-btn:hover { background: #444; border-color: #007acc; }
-        .loading { color: #ffcc00; font-weight: bold; text-align: center; padding: 20px; }
-    </style>
+    <title>萬能 AI 文字冒險產生器 - 核心大專案</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">
-    <h1>⚔️ 自製 AI 文字冒險產生器 (無限暢玩版)</h1>
+    <h1>⚔️ 萬能 AI 文字冒險產生器 (模組化防外洩版)</h1>
     
-    <!-- 基礎設定 -->
+    <!-- 初始自由設定面板 -->
     <div id="setup-panel" class="panel">
-        <h3>🔑 初始遊戲設定</h3>
-        <label>Gemini API 金鑰：</label>
+        <h3>🔑 創造你的世界與角色</h3>
+        
+        <label>1. Gemini API 金鑰：</label>
         <input type="password" id="apiKey" placeholder="請貼上你的 API 金鑰 (AIzaSy...)">
+        <p style="font-size:12px; color:#888; margin-top:-8px; margin-bottom:12px;">※ 金鑰僅會安全地儲存於您的本機瀏覽器（localStorage），絕不上傳至 GitHub。</p>
         
-        <label>選擇世界觀：</label>
-        <select id="worldSetting">
-            <option value="中世紀黑暗奇幻（有巨龍、魔法、地下城與邪惡魔王）">中世紀黑暗奇幻</option>
-            <option value="末日殭屍廢土（資源匱乏、喪屍橫行、科技斷代）">末日殭屍廢土</option>
-            <option value="賽博朋克高科技都市（霓虹燈、機械改造、大企業掌控世界）">賽博朋克都市</option>
-            <option value="東方修仙玄幻（修真門派、渡劫飛升、妖魔鬼怪）">東方修仙玄幻</option>
-        </select>
+        <label>2. 想像你的世界觀 (自由填寫)：</label>
+        <textarea id="worldSetting" rows="3" placeholder="例如：2026年的台北街頭，突然爆發了不明的喪屍病毒...&#10;或是：一個充滿霓虹燈與義體改造的賽博朋克極道都市..."></textarea>
 
-        <label>選擇初始職業：</label>
-        <select id="playerClass">
-            <option value="戰士 (HP:120, ATK:18, DEF:8)">🛡️ 戰士 (高血高防)</option>
-            <option value="法師 (HP:80, ATK:25, DEF:3)">🔮 法師 (高攻擊力)</option>
-            <option value="刺客 (HP:95, ATK:21, DEF:5)">🗡️ 刺客 (均衡爆發)</option>
-        </select>
+        <label>3. 填寫你的初始職業/身份 (自由填寫)：</label>
+        <input type="text" id="playerClass" placeholder="例如：半夜還在送餐的熊貓外送員 / 駭客 / 退役特種兵">
         
-        <button onclick="startAdventure()" style="background:#28a745;">🎲 開始全新冒險</button>
+        <button onclick="startAdventure()" style="background:#28a745;">🎲 覺醒身份！開始全新冒險</button>
     </div>
 
-    <!-- 遊戲主畫面（預設隱藏） -->
+    <!-- 遊戲主畫面 (預設隱藏) -->
     <div id="game-panel" class="panel" style="display:none;">
-        <div class="status-grid" style="margin-bottom: 20px;">
-            <div style="color:#ff4d4d;">❤️ HP: <span id="hp">100</span></div>
-            <div style="color:#ffcc00;">⚔️ 攻擊: <span id="atk">15</span></div>
-            <div style="color:#28a745;">🛡️ 防禦: <span id="def">5</span></div>
-            <div style="color:#00e6ff;">💰 金幣: <span id="gold">0</span></div>
+        <div class="status-grid">
+            <div style="color:#ff4d4d;">❤️ HP: <span id="hp">???</span></div>
+            <div style="color:#ffcc00;">⚔️ 攻擊: <span id="atk">???</span></div>
+            <div style="color:#28a745;">🛡️ 防禦: <span id="def">???</span></div>
+            <div style="color:#00e6ff;">💰 金幣: <span id="gold">???</span></div>
         </div>
         
         <h3>📜 當前遭遇事件</h3>
@@ -63,123 +44,9 @@
     </div>
 </div>
 
-<script>
-    let chatHistory = [];
-    let playerStatus = { hp: 100, atk: 15, def: 5, gold: 0 };
-
-    const SYSTEM_INSTRUCTION = `
-    你是一個嚴謹的文字冒險遊戲主機（GM）。請根據玩家的世界觀與職業展開繁體中文故事。
-    
-    【核心規則】
-    1. 戰鬥與事件必須根據玩家當前的 HP、攻擊力、防禦力進行合乎邏輯的數值碰撞，精算傷害與獎勵。
-    2. 你每次的回應，格式必須嚴格遵守以下 JSON 格式（這點至關重要，不要輸出任何額外文字，只能輸出這段 JSON）：
-    {
-      "story": "生動的場景描述，字數約100-200字，若發生戰鬥要明確寫出傷害與血量扣除過程。",
-      "hp_change": 0,
-      "atk_change": 0,
-      "def_change": 0,
-      "gold_change": 0,
-      "options": [
-        "選項一描述（例如：強行揮劍斬殺哥布林）",
-        "選項二描述（例如：利用夜色悄悄繞過去）",
-        "選項三描述（例如：大聲呼救吸引附近衛兵）"
-      ]
-    }
-    `;
-
-    async function callGemini(contents) {
-        const apiKey = document.getElementById('apiKey').value.trim();
-        const url = `https://googleapis.com{apiKey}`;
-        
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: contents,
-                systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-                generationConfig: { responseMimeType: "application/json" } // 強制 Gemini 回傳 JSON 格式
-            })
-        });
-
-        const data = await response.json();
-        if (data.error) throw new Error(data.error.message);
-        return data.candidates[0].content.parts[0].text;
-    }
-
-    async function startAdventure() {
-        const pClass = document.getElementById('playerClass').value;
-        const world = document.getElementById('worldSetting').value;
-        
-        // 根據職業設定初始數值
-        if(pClass.includes("戰士")) playerStatus = { hp: 120, atk: 18, def: 8, gold: 10 };
-        else if(pClass.includes("法師")) playerStatus = { hp: 80, atk: 25, def: 3, gold: 30 };
-        else playerStatus = { hp: 95, atk: 21, def: 5, gold: 20 };
-
-        document.getElementById('setup-panel').style.display = 'none';
-        document.getElementById('game-panel').style.display = 'block';
-        
-        await renderLoading();
-
-        const firstPrompt = `我選擇了 ${world} 世界觀，我的職業是 ${pClass}。目前能力值為：HP:${playerStatus.hp}, ATK:${playerStatus.atk}, DEF:${playerStatus.def}, GOLD:${playerStatus.gold}。請生成開場隨機事件與三個選項。`;
-        chatHistory = [{ role: 'user', parts: [{ text: firstPrompt }] }];
-        
-        await processTurn();
-    }
-
-    async function selectOption(optionText) {
-        await renderLoading();
-        
-        const nextPrompt = `我選擇了行動：【${optionText}】。請根據此行動，結合我目前的狀態（HP:${playerStatus.hp}, ATK:${playerStatus.atk}, DEF:${playerStatus.def}, GOLD:${playerStatus.gold}），精算傷害與結果，給出後續劇情、狀態變動值與新的三個選項。`;
-        chatHistory.push({ role: 'user', parts: [{ text: nextPrompt }] });
-        
-        await processTurn();
-    }
-
-    async function processTurn() {
-        try {
-            const rawJson = await callGemini(chatHistory);
-            chatHistory.push({ role: 'model', parts: [{ text: rawJson }] });
-            
-            const gameData = JSON.parse(rawJson);
-            
-            // 更新玩家數值
-            playerStatus.hp = Math.max(0, playerStatus.hp + (gameData.hp_change || 0));
-            playerStatus.atk = Math.max(0, playerStatus.atk + (gameData.atk_change || 0));
-            playerStatus.def = Math.max(0, playerStatus.def + (gameData.def_change || 0));
-            playerStatus.gold = Math.max(0, playerStatus.gold + (gameData.gold_change || 0));
-            
-            // 刷新介面
-            document.getElementById('hp').innerText = playerStatus.hp;
-            document.getElementById('atk').innerText = playerStatus.atk;
-            document.getElementById('def').innerText = playerStatus.def;
-            document.getElementById('gold').innerText = playerStatus.gold;
-            
-            // 處理死亡結局
-            if (playerStatus.hp <= 0) {
-                document.getElementById('story-text').innerHTML = `💀 <b>【冒險結束】</b>\n\n${gameData.story}\n\n你已經不幸陣亡！`;
-                document.getElementById('options-container').innerHTML = `<button onclick="location.reload()" style="background:#dc3545;">重新開始新冒險</button>`;
-                return;
-            }
-
-            document.getElementById('story-text').innerText = gameData.story;
-            
-            // 渲染三個 AI 隨機生成的選項
-            let optionsHtml = '';
-            gameData.options.forEach(opt => {
-                optionsHtml += `<button class="option-btn" onclick="selectOption('${opt.replace(/'/g, "\\'")}')">👉 ${opt}</button>`;
-            });
-            document.getElementById('options-container').innerHTML = optionsHtml;
-            
-        } catch (err) {
-            document.getElementById('story-text').innerText = `系統錯誤：${err.message}\n請檢查金鑰或網路連線。`;
-            document.getElementById('options-container').innerHTML = `<button onclick="location.reload()">重新整理</button>`;
-        }
-    }
-
-    function renderLoading() {
-        document.getElementById('story-text').innerHTML = `<div class="loading">⏳ 命運之輪轉動中，AI 正在精算結果與生成隨機事件...</div>`;
-        document.getElementById('options-container').innerHTML = '';
-    }
-</script>
+<!-- 引入模組指令，注意順序：通訊與狀態最先，主控程式最後 -->
+<script src="js/api.js"></script>
+<script src="js/system.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
