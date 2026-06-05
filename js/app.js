@@ -1,10 +1,4 @@
-// 網頁載入完成後，自動從本機 localStorage 讀取金鑰
-window.addEventListener('DOMContentLoaded', () => {
-    const savedKey = localStorage.getItem('my_gemini_api_key');
-    if (savedKey) {
-        document.getElementById('apiKey').value = savedKey;
-    }
-});
+// 【已移除】原本的自動讀取暫存機制已徹底刪除，確保每次進入網頁金鑰欄位皆為空。
 
 // 啟動全新冒險
 async function startAdventure() {
@@ -14,7 +8,7 @@ async function startAdventure() {
 
     if (!apiKey) { alert('請先輸入你的 Gemini API 金鑰！'); return; }
 
-    localStorage.setItem('my_gemini_api_key', apiKey);
+    // 【已移除】原本的 localStorage.setItem 安全記憶功能已刪除，網頁不會保留任何金鑰紀錄。
 
     // 切換面板顯示
     document.getElementById('setup-panel').style.display = 'none';
