@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬能 AI 文字冒險產生器 - 核心大專案</title>
+    <title>萬能 AI 文字冒險產生器 - 多模式大專案</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">
-    <h1>⚔️ 萬能 AI 文字冒險產生器 (模組化防外洩版)</h1>
+    <h1>⚔️ 萬能 AI 文字冒險產生器 (雙模式暢玩版)</h1>
     
     <!-- 初始自由設定面板 -->
     <div id="setup-panel" class="panel">
@@ -18,11 +18,17 @@
         <input type="password" id="apiKey" placeholder="請貼上你的 API 金鑰 (AIzaSy...)">
         <p style="font-size:12px; color:#888; margin-top:-8px; margin-bottom:12px;">※ 金鑰僅會安全地儲存於您的本機瀏覽器（localStorage），絕不上傳至 GitHub。</p>
         
-        <label>2. 想像你的世界觀 (自由填寫)：</label>
-        <textarea id="worldSetting" rows="3" placeholder="例如：2026年的台北街頭，突然爆發了不明的喪屍病毒...&#10;或是：一個充滿霓虹燈與義體改造的賽博朋克極道都市..."></textarea>
+        <label>2. 選擇玩法模式：</label>
+        <select id="gameMode">
+            <option value="DND">🎲 D&D 跑團模式 (硬核 D20 骰點檢定、嚴謹戰鬥數值)</option>
+            <option value="NOVEL">📖 AI 小說模式 (重劇情敘事、隨機奇遇、電影感體驗)</option>
+        </select>
 
-        <label>3. 填寫你的初始職業/身份 (自由填寫)：</label>
-        <input type="text" id="playerClass" placeholder="例如：半夜還在送餐的熊貓外送員 / 駭客 / 退役特種兵">
+        <label>3. 想像你的世界觀：</label>
+        <textarea id="worldSetting" rows="3" placeholder="例如：2026年的台北街頭..."></textarea>
+
+        <label>4. 填寫你的初始職業/身份：</label>
+        <input type="text" id="playerClass" placeholder="例如：半夜還在送餐的熊貓外送員 / 浪人武士 / 賽博駭客">
         
         <button onclick="startAdventure()" style="background:#28a745;">🎲 覺醒身份！開始全新冒險</button>
     </div>
@@ -36,7 +42,7 @@
             <div style="color:#00e6ff;">💰 金幣: <span id="gold">???</span></div>
         </div>
         
-        <h3>📜 當前遭遇事件</h3>
+        <h3>📜 當前遭遇事件 <span id="mode-badge" style="font-size:14px; background:#444; padding:3px 8px; border-radius:4px; margin-left:10px;"></span></h3>
         <div id="story-text"></div>
 
         <h3>🎯 抉擇行動選項</h3>
@@ -44,7 +50,6 @@
     </div>
 </div>
 
-<!-- 引入模組指令，注意順序：通訊與狀態最先，主控程式最後 -->
 <script src="js/api.js"></script>
 <script src="js/system.js"></script>
 <script src="js/app.js"></script>
