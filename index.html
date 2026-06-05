@@ -3,46 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>萬能 AI 文字冒險產生器 - 多模式大專案</title>
+    <title>AI D&D 獨自跑團產生器</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">
-    <h1>⚔️ 萬能 AI 文字冒險產生器 (雙模式暢玩版)</h1>
+    <h1>🎲 AI D&D 獨自跑團產生器 (哥布林殺手/自訂世界版)</h1>
     
     <!-- 初始自由設定面板 -->
     <div id="setup-panel" class="panel">
-        <h3>🔑 創造你的世界與角色</h3>
+        <h3>⚔️ 創造你的冒險世界與角色</h3>
         
         <label>1. Gemini API 金鑰：</label>
         <input type="password" id="apiKey" placeholder="請貼上你的 API 金鑰 (AIzaSy...)">
         <p style="font-size:12px; color:#888; margin-top:-8px; margin-bottom:12px;">※ 金鑰僅會安全地儲存於您的本機瀏覽器（localStorage），絕不上傳至 GitHub。</p>
         
-        <label>2. 選擇玩法模式：</label>
-        <select id="gameMode">
-            <option value="DND">🎲 D&D 跑團模式 (硬核 D20 骰點檢定、嚴謹戰鬥數值)</option>
-            <option value="NOVEL">📖 AI 小說模式 (重劇情敘事、隨機奇遇、電影感體驗)</option>
-        </select>
+        <label>2. 想像你的世界觀背景 (自由填寫)：</label>
+        <textarea id="worldSetting" rows="3" placeholder="例如：哥布林殺手小說的世界觀，充滿殘酷、寫實的冒險者公會、陰暗潮濕的哥布林洞穴..."></textarea>
 
-        <label>3. 想像你的世界觀：</label>
-        <textarea id="worldSetting" rows="3" placeholder="例如：2026年的台北街頭..."></textarea>
-
-        <label>4. 填寫你的初始職業/身份：</label>
-        <input type="text" id="playerClass" placeholder="例如：半夜還在送餐的熊貓外送員 / 浪人武士 / 賽博駭客">
+        <label>3. 填寫你的初始職業/身份 (自由填寫)：</label>
+        <input type="text" id="playerClass" placeholder="例如：剛註冊的白瓷級冒險者 / 擅長潛行的小鬼殺手 / 魔法學校畢業的白袍神官">
         
-        <button onclick="startAdventure()" style="background:#28a745;">🎲 覺醒身份！開始全新冒險</button>
+        <button onclick="startAdventure()" style="background:#28a745;">🎲 擲骰決定初始能力！開團</button>
     </div>
 
-    <!-- 遊戲主畫面 (預設隱藏) -->
+    <!-- 遊戲主畫面 -->
     <div id="game-panel" class="panel" style="display:none;">
         <div class="status-grid">
             <div style="color:#ff4d4d;">❤️ HP: <span id="hp">???</span></div>
-            <div style="color:#ffcc00;">⚔️ 攻擊: <span id="atk">???</span></div>
-            <div style="color:#28a745;">🛡️ 防禦: <span id="def">???</span></div>
-            <div style="color:#00e6ff;">💰 金幣: <span id="gold">???</span></div>
+            <div style="color:#ffcc00;">⚔️ 攻擊修正: +<span id="atk">???</span></div>
+            <div style="color:#28a745;">🛡️ 防禦防護: <span id="def">???</span></div>
+            <div style="color:#00e6ff;">💰 銀幣: <span id="gold">???</span></div>
         </div>
         
-        <h3>📜 當前遭遇事件 <span id="mode-badge" style="font-size:14px; background:#444; padding:3px 8px; border-radius:4px; margin-left:10px;"></span></h3>
+        <h3>📜 旁白 (地下城主 DM) 敘事</h3>
         <div id="story-text"></div>
 
         <h3>🎯 抉擇行動選項</h3>
@@ -50,6 +44,7 @@
     </div>
 </div>
 
+<!-- 引入模組檔案 -->
 <script src="js/api.js"></script>
 <script src="js/system.js"></script>
 <script src="js/app.js"></script>
