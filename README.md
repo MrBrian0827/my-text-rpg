@@ -1,76 +1,92 @@
-# 邊境紀事 · Border Chronicles
+# 夜旅筆記
 
-純前端單人文字冒險遊戲，搭配 Google Gemini API 進行 AI 說書人敘事。  
-玩家可自行輸入世界觀與角色設定，展開原創奇幻旅程。
+私人連載筆記工具。以 Gemini API 共同續寫原創故事，**僅供作者本人使用**。
 
 ---
 
-## 免責聲明與使用限制（請務必閱讀）
+## 存取碼安全說明（請先讀）
 
-本專案為**個人學習與非商業用途**之業餘作品，**不提供任何收費服務**，亦**不得用於營利**。
+### Actions Secret 能保護什麼？
 
-### 關於參考來源
+| 保護項目 | Private repo | Actions Secret | 前端存取碼畫面 |
+|---------|:------------:|:--------------:|:--------------:|
+| 外人看不到 GitHub 原始碼 | ✅ | — | — |
+| 密碼不出現在 git 紀錄 | — | ✅ | — |
+| 密碼不寫在 repo 檔案裡 | — | ✅ | — |
+| 開啟網頁的人無法得知密碼 | — | — | ❌ |
 
-本專案在玩法與世界觀設定上，**參考、啟發自市面上既有的付費跑團／文字冒險類產品與相關創作**，但：
+**重點**：這是純前端網頁，部署後瀏覽器一定會下載 `config.js`。  
+因此無論密碼寫在 repo 還是用 Actions Secret 注入，**知道網址的人仍可在瀏覽器開發者工具看到密碼**，或直接略過驗證。
 
-- **並非**上述任何商業產品之官方版本、移植版、破解版或授權衍生作
-- **與**任何商業產品之開發者、發行商、權利人**無任何合作、授權或從屬關係**
-- **不提供**原付費產品之內容、劇本、素材或功能之複製或替代
+Actions Secret 的價值是：**密碼不會被 commit 到 GitHub**，而不是「網頁訪客看不到」。
 
-請使用者**勿將本專案視為付費產品之免費替代品**，亦**請勿對外宣稱與原作品有關聯**。
+### 實際防護策略（個人使用足夠）
 
-### 關於智慧財產權
+1. **倉庫設 Private** → 外人看不到你的程式碼
+2. **repo 名稱低調** → 降低網址被猜到的機會
+3. **不公開分享網址** → 不貼社群、論壇
+4. **存取碼** → 擋住「偶然點進來」的人，不是軍事級加密
+5. 已內建 `noindex` → 降低被搜尋引擎收錄
 
-- **D&D（龍與地下城）** 為 Wizards of the Coast 等權利人之商標或著作，本專案僅作個人娛樂向之**風格致敬**，不主張任何官方授權。
-- 任何知名小說、遊戲、動漫之角色與設定屬其權利人所有；本專案**未內建、未散佈**任何受版權保護之原文、圖像或官方素材，玩家輸入之內容由其自行負責。
-- 本專案所使用之程式碼（除第三方 API 外）以個人創作與開源慣例為主；使用者應自行確保使用方式符合相關法律與平台規範。
+若需要「真正只有你能開」的保護，必須加**伺服器端驗證**（例如 Cloudflare Access），已超出本專案範圍。
 
-### 使用範圍
+---
 
-| 允許 | 不允許 |
-|------|--------|
-| 個人私下遊玩、學習研究 | 收費、訂閱、打賞營利 |
-| 自行部署於私人 GitHub Pages | 冒充官方或付費產品進行宣傳 |
-| 修改程式碼供**個人**使用 | 未經授權之商業轉售或再授權 |
+## 多裝置遊玩設定
 
-### 一般免責
+### 1. 設定 GitHub Secret
 
-- 本專案依「現狀」（AS IS）提供，**不提供任何明示或默示之保證**。
-- 作者不對因使用本專案所產生之任何直接或間接損害負責。
-- 使用者須自行負責：API 金鑰安全、網路連線、以及是否符合 Google Gemini API 之服務條款。
+repo → **Settings → Secrets and variables → Actions → New repository secret**
+
+| Name | Value |
+|------|-------|
+| `ACCESS_CODE` | 你的私人密碼（自訂，記得住即可） |
+
+### 2. 啟用 GitHub Pages（Actions 部署）
+
+1. **Settings → Pages → Build and deployment**
+2. **Source** 選 **GitHub Actions**（不是 Deploy from branch）
+3. push 到 `main` 分支，Actions 會自動部署
+
+### 3. 各裝置加入書籤
+
+開啟 `https://你的帳號.github.io/倉庫名/` → 輸入存取碼 → 勾「記住此裝置」→ 加書籤。
+
+---
+
+## 本機測試（選用）
+
+```bash
+cp js/config.example.js js/config.js
+# 編輯 js/config.js 填入密碼
+npx serve .
+```
+
+`js/config.js` 已在 `.gitignore`，不會被 commit。
+
+---
+
+## 免責聲明
+
+本專案為**個人非商業**之學習作品，與任何付費產品無關。請勿公開宣傳或收費。
 
 ---
 
 ## 技術說明
 
-- **部署方式**：GitHub Pages（純靜態網頁，無後端伺服器）
-- **API**：使用者自行至 [Google AI Studio](https://aistudio.google.com/apikey) 申請 Gemini API 金鑰
-- **隱私**：金鑰僅存於本次遊戲的瀏覽器記憶體，不寫入 `localStorage`，亦不會上傳至本 repo
-
-### 檔案結構
+- 純靜態 HTML / CSS / JS
+- **API 金鑰**：僅存瀏覽器記憶體，不寫入 localStorage
+- 金鑰申請：[Google AI Studio](https://aistudio.google.com/apikey)
 
 ```
+├── .github/workflows/deploy-pages.yml
 ├── index.html
 ├── css/style.css
 └── js/
-    ├── api.js      # Gemini API 連線
-    ├── system.js   # D&D 規則與系統指令
-    └── app.js      # 遊戲流程控制
+    ├── config.example.js  ← 本機用範本
+    ├── config.js          ← 本機用（gitignore）/ 線上由 Actions 產生
+    ├── gate.js
+    ├── api.js
+    ├── system.js
+    └── app.js
 ```
-
-### GitHub Pages 部署
-
-1. 將專案 push 至 GitHub
-2. **Settings → Pages → Source** 選 `main` 分支、`/ (root)`
-3. 開啟 `https://<你的帳號>.github.io/<repo名稱>/`
-4. 輸入 API 金鑰後即可遊玩
-
----
-
-## 授權聲明
-
-本 repo 之程式碼供**個人非商業使用**；  
-若涉及第三方商標、角色或設定，其權利仍歸原權利人所有。  
-**禁止**以本專案進行任何營利行為。
-
-如有權利人認為本專案有侵權疑慮，請透過 GitHub Issues 聯繫，將依合理要求配合處理。

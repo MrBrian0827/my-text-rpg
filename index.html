@@ -3,107 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>邊境紀事 · AI 文字冒險</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>夜旅筆記</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+TC:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="bg-pattern" aria-hidden="true"></div>
 
-    <header class="site-header">
-        <div class="brand">
-            <span class="brand-mark">BC</span>
-            <div>
-                <h1>邊境紀事</h1>
-                <p class="tagline">Border Chronicles · 單人 AI 文字冒險</p>
-            </div>
+    <!-- 私人存取碼驗證 -->
+    <section id="gate-panel" class="gate-view">
+        <div class="gate-view__inner">
+            <h1>夜旅筆記</h1>
+            <p class="gate-lead">私人連載，請輸入存取碼。</p>
+            <form onsubmit="handleUnlock(event)">
+                <label for="gate-code">存取碼</label>
+                <input type="password" id="gate-code" placeholder="你的私人密碼" autocomplete="off" required>
+                <label class="gate-remember">
+                    <input type="checkbox" id="gate-remember" checked>
+                    記住此裝置（下次免輸入）
+                </label>
+                <p id="gate-error" class="gate-error" hidden></p>
+                <button type="submit" class="btn-write">進入</button>
+            </form>
         </div>
-    </header>
+    </section>
 
-    <main class="app-shell">
+    <div id="app-content" class="app-frame" hidden>
 
-        <!-- 開局設定 -->
-        <section id="setup-panel" class="card setup-card">
-            <div class="card-head">
-                <span class="step-badge">START</span>
-                <h2>撰寫你的第一章</h2>
-                <p class="card-desc">設定世界與角色，AI 說書人將依你的想像展開旅程。</p>
+        <header class="top-bar">
+            <div class="top-bar__title">
+                <h1>夜旅筆記</h1>
+                <span class="top-bar__sub">私人連載 · 僅供作者自用</span>
             </div>
+        </header>
 
-            <div class="form-block">
-                <label for="apiKey">API 金鑰</label>
-                <input type="password" id="apiKey" placeholder="貼上 Gemini API 金鑰（AIzaSy…）" autocomplete="off">
-                <p class="hint">金鑰僅存於本次遊戲記憶體，不寫入 localStorage。至 <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> 免費申請。</p>
+        <section id="setup-panel" class="setup-view">
+            <div class="setup-view__inner">
+                <p class="setup-lead">這是一本只屬於你的連載筆記。寫下世界與主角，AI 會以散文方式續寫——你再用自己的話決定下一步。</p>
+
+                <label for="apiKey">Gemini API 金鑰</label>
+                <input type="password" id="apiKey" placeholder="AIzaSy…" autocomplete="off">
+                <p class="field-note">金鑰僅存於本次瀏覽器記憶體，不寫入 localStorage。<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">申請金鑰</a></p>
+
+                <label for="worldSetting">故事舞台</label>
+                <textarea id="worldSetting" rows="3" placeholder="時間、地點、氛圍……例如：雨季中的海港城市，燈火與迷霧交織。"></textarea>
+
+                <label for="playerClass">主角是誰</label>
+                <input type="text" id="playerClass" placeholder="例如：剛辭職的檔案管理員、四處寄信的旅人">
+
+                <button type="button" class="btn-write" onclick="startAdventure()">寫下第一頁</button>
             </div>
-
-            <div class="form-block">
-                <label for="worldSetting">世界背景</label>
-                <textarea id="worldSetting" rows="4" placeholder="例如：霧氣繚繞的邊境城邦、古代遺跡與盜賊公會並存的破碎大陸…"></textarea>
-            </div>
-
-            <div class="form-block">
-                <label for="playerClass">角色身分</label>
-                <input type="text" id="playerClass" placeholder="例如：見習學者 / 流浪傭兵 / 村莊守夜人">
-            </div>
-
-            <button type="button" class="btn-primary" onclick="startAdventure()">擲骰，踏上旅途</button>
         </section>
 
-        <!-- 遊戲進行中 -->
-        <section id="game-panel" class="game-layout" hidden>
+        <section id="game-panel" class="journal-view" hidden>
 
-            <aside class="stat-panel card">
-                <h2 class="stat-title">角色狀態</h2>
-                <ul class="stat-list">
-                    <li class="stat-item stat-hp">
-                        <span class="stat-label">生命</span>
-                        <span class="stat-value" id="hp">—</span>
-                    </li>
-                    <li class="stat-item stat-atk">
-                        <span class="stat-label">攻擊</span>
-                        <span class="stat-value">+<span id="atk">—</span></span>
-                    </li>
-                    <li class="stat-item stat-def">
-                        <span class="stat-label">防禦</span>
-                        <span class="stat-value" id="def">—</span>
-                    </li>
-                    <li class="stat-item stat-gold">
-                        <span class="stat-label">財產</span>
-                        <span class="stat-value"><span id="gold">—</span> G</span>
-                    </li>
-                </ul>
-            </aside>
-
-            <div class="play-panel">
-                <div class="card narrative-card">
-                    <div class="card-head compact">
-                        <span class="step-badge">LOG</span>
-                        <h2>旅途紀錄</h2>
-                    </div>
-                    <div id="story-text" class="story-body"></div>
-                </div>
-
-                <div class="card choices-card">
-                    <div class="card-head compact">
-                        <span class="step-badge">ACT</span>
-                        <h2>下一步</h2>
-                    </div>
-                    <div id="options-container" class="choices-list"></div>
+            <div class="status-bar">
+                <span class="mood-tag" id="mood-text">—</span>
+                <div class="status-pills">
+                    <span class="pill">精力 <b id="energy">—</b></span>
+                    <span class="pill">靈感 <b id="insight">—</b></span>
+                    <span class="pill">信譽 <b id="rapport">—</b></span>
+                    <span class="pill">積蓄 <b id="savings">—</b></span>
                 </div>
             </div>
 
+            <div id="narrative-log" class="narrative-log" aria-live="polite"></div>
+
+            <form id="action-form" class="action-form" onsubmit="submitAction(event)">
+                <label for="player-action" class="sr-only">你的下一步</label>
+                <textarea id="player-action" rows="2" placeholder="用一句話或一段話描述主角接下來想做什麼……" required></textarea>
+                <button type="submit" class="btn-write" id="submit-btn">續寫</button>
+            </form>
+
         </section>
 
-    </main>
+    </div>
 
-    <footer class="site-footer">
-        <p>本作品為個人非商業學習專案，與任何付費產品無關。D&D 等商標屬其權利人所有。</p>
-    </footer>
-
-    <script src="js/api.js?v=6"></script>
-    <script src="js/system.js?v=6"></script>
-    <script src="js/app.js?v=6"></script>
+    <script src="js/config.js?v=8"></script>
+    <script src="js/gate.js?v=8"></script>
+    <script src="js/api.js?v=8"></script>
+    <script src="js/system.js?v=8"></script>
+    <script src="js/app.js?v=8"></script>
 </body>
 </html>
