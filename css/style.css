@@ -16,6 +16,11 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* 防止自訂 display 覆蓋 hidden，導致驗證後畫面切換失效 */
+[hidden] {
+    display: none !important;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
