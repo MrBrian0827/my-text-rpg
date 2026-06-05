@@ -16,7 +16,7 @@
         
         <label>1. Gemini API 金鑰：</label>
         <input type="password" id="apiKey" placeholder="請貼上你的 API 金鑰 (AIzaSy...)">
-        <p style="font-size:12px; color:#888; margin-top:-8px; margin-bottom:12px;">※ 金鑰僅會安全地儲存於您的本機瀏覽器（localStorage），絕不上傳至 GitHub。</p>
+        <p style="font-size:12px; color:#888; margin-top:-8px; margin-bottom:12px;">※ 金鑰僅在本次遊戲的瀏覽器記憶體中使用，不會寫入 localStorage，也不會上傳至 GitHub。<br>※ 金鑰請至 <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:#6cb4ff;">Google AI Studio</a> 免費申請。</p>
         
         <label>2. 想像你的世界觀背景 (自由填寫)：</label>
         <textarea id="worldSetting" rows="3" placeholder="例如：哥布林殺手小說的世界觀，充滿殘酷、寫實的冒險者公會、陰暗潮濕的哥布林洞穴..."></textarea>
@@ -45,8 +45,8 @@
 </div>
 
 <!-- 引入模組檔案 -->
-<script src="js/api.js"></script>
-<script src="js/system.js"></script>
-<script src="js/app.js"></script>
+<script src="js/api.js?v=5"></script>
+<script src="js/system.js?v=5"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 // 【已移除】原本的自動讀取暫存機制已徹底刪除，確保每次進入網頁金鑰欄位皆為空。
+// 金鑰僅存於本次遊戲的記憶體，供回合切換使用（不寫入 localStorage）
+let sessionApiKey = '';
 
 // 啟動全新冒險
 async function startAdventure() {
@@ -7,6 +9,8 @@ async function startAdventure() {
     const pClass = document.getElementById('playerClass').value.trim() || "冒險者公會新人";
 
     if (!apiKey) { alert('請先輸入你的 Gemini API 金鑰！'); return; }
+
+    sessionApiKey = apiKey;
 
     // 【已移除】原本的 localStorage.setItem 安全記憶功能已刪除，網頁不會保留任何金鑰紀錄。
 
@@ -27,13 +31,12 @@ async function startAdventure() {
 
 // 玩家點擊選項時觸發的函式
 async function selectOption(optionText) {
-    const apiKey = document.getElementById('apiKey').value.trim();
     renderLoading();
     
     const nextPrompt = `我決定採取的行動是：【${optionText}】。請在幕後秘密投擲 D20 骰子進行這項行動的成功檢定，並結合我的當前實際狀態（HP:${playerStatus.hp}, ATK:${playerStatus.atk}, DEF:${playerStatus.def}, GOLD:${playerStatus.gold}）精算傷害或利益，給出後續劇情與新的三個選項。`;
     chatHistory.push({ role: 'user', parts: [{ text: nextPrompt }] });
     
-    await processTurn(apiKey, false);
+    await processTurn(sessionApiKey, false);
 }
 
 // 回合計算控制
@@ -42,7 +45,12 @@ async function processTurn(apiKey, isFirstTurn) {
         const rawJson = await callGeminiAPI(apiKey, chatHistory, GAME_SYSTEM_INSTRUCTION);
         chatHistory.push({ role: 'model', parts: [{ text: rawJson }] });
         
-        const gameData = JSON.parse(rawJson);
+        let gameData;
+        try {
+            gameData = JSON.parse(rawJson);
+        } catch (_) {
+            throw new Error('AI 回傳格式異常，請重新整理後再試一次。');
+        }
         
         // 更新玩家數值
         if (isFirstTurn) {
@@ -76,7 +84,7 @@ async function processTurn(apiKey, isFirstTurn) {
         document.getElementById('options-container').innerHTML = optionsHtml;
         
     } catch (err) {
-        document.getElementById('story-text').innerText = `連線出錯：${err.message}\n請確認金鑰正確、未開防追蹤阻擋，或點擊下方按鈕重試。`;
+        document.getElementById('story-text').innerText = `連線出錯：${err.message}`;
         document.getElementById('options-container').innerHTML = `<button onclick="location.reload()">重新整理網頁</button>`;
     }
 }
