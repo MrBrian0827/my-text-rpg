@@ -84,7 +84,7 @@ async function submitAction(event) {
 
 async function processTurn(apiKey, isFirstTurn) {
     try {
-        const rawJson = await callGeminiAPI(apiKey, chatHistory, GAME_SYSTEM_INSTRUCTION);
+        const rawJson = await callGeminiAPIWithRetry(apiKey, chatHistory, GAME_SYSTEM_INSTRUCTION);
         chatHistory.push({ role: 'model', parts: [{ text: rawJson }] });
 
         let data;

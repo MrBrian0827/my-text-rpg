@@ -215,3 +215,36 @@ async function callGeminiAPI(apiKey, contents, systemInstruction) {
     }
     return text;
 }
+
+async function callGeminiAPIWithRetry(apiKey, contents, systemInstruction, maxRetry = 3) {
+    let lastError;
+
+    for (let i = 0; i < maxRetry; i++) {
+        try {
+            return await callGeminiAPI(apiKey, contents, systemInstruction);
+        } catch (err) {
+            lastError = err;
+
+            // 👉 只針對 503 / 500 / 504 retry
+            const status = err?.statusCode;
+
+            const shouldRetry =
+                status === 503 ||
+                status === 500 ||
+                status === 504;
+
+            if (!shouldRetry) {
+                throw err; // ❌ 其他錯誤直接丟
+            }
+
+            // 👉 指數退避（越來越久）
+            const waitTime = 1500 * Math.pow(2, i);
+
+            console.warn(`Retry ${i + 1}/${maxRetry} after ${waitTime}ms`);
+
+            await new Promise(r => setTimeout(r, waitTime));
+        }
+    }
+
+    throw lastError;
+}
