@@ -1,15 +1,19 @@
-/* 夜旅筆記 — 私人連載筆記本風格（非遊戲介面） */
+/* 邊境委託所 */
 
 :root {
-    --paper: #faf8f4;
-    --paper-line: #e8e2d6;
-    --ink: #2a2825;
-    --ink-soft: #6e6a62;
-    --accent: #4a5c6a;
-    --accent-hover: #3a4a56;
-    --user-bg: #eef1f4;
-    --ai-bg: #ffffff;
-    --danger: #8b4040;
+    --page: #201f1c;
+    --paper: #f6f1e8;
+    --paper-strong: #fffaf0;
+    --paper-line: #d7c8ad;
+    --ink: #251f1b;
+    --ink-soft: #675e52;
+    --accent: #8a332c;
+    --accent-hover: #702821;
+    --forest: #405a46;
+    --gold: #9b7437;
+    --user-bg: #e8eee5;
+    --ai-bg: #fffaf0;
+    --danger: #7f2727;
     --font-sans: 'IBM Plex Sans TC', 'PingFang TC', sans-serif;
     --font-serif: 'IBM Plex Serif', 'Noto Serif TC', Georgia, serif;
 }
@@ -24,7 +28,9 @@
 body {
     margin: 0;
     min-height: 100vh;
-    background: #e4e0d8;
+    background:
+        linear-gradient(180deg, rgba(32,31,28,0.94), rgba(32,31,28,0.98)),
+        repeating-linear-gradient(90deg, #2b2925 0, #2b2925 1px, #201f1c 1px, #201f1c 18px);
     color: var(--ink);
     font-family: var(--font-sans);
     line-height: 1.7;
@@ -46,12 +52,20 @@ body {
     display: grid;
     place-items: center;
     padding: 1.5rem;
-    background: var(--paper);
+    background:
+        radial-gradient(circle at top, rgba(155,116,55,0.2), transparent 28rem),
+        var(--page);
 }
 
 .gate-view__inner {
     width: 100%;
     max-width: 360px;
+    padding: 1.5rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--paper-line);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
 }
 
 .gate-view h1 {
@@ -90,11 +104,11 @@ body {
 }
 
 .app-frame {
-    max-width: 680px;
+    max-width: 820px;
     margin: 0 auto;
     min-height: 100vh;
     background: var(--paper);
-    box-shadow: 0 0 60px rgba(0,0,0,0.08);
+    box-shadow: 0 0 90px rgba(0,0,0,0.42);
     display: flex;
     flex-direction: column;
 }
@@ -104,6 +118,7 @@ body {
 .top-bar {
     padding: 1.25rem 1.5rem 1rem;
     border-bottom: 1px solid var(--paper-line);
+    background: var(--paper-strong);
 }
 
 .top-bar h1 {
@@ -111,13 +126,13 @@ body {
     font-family: var(--font-serif);
     font-size: 1.35rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0;
 }
 
 .top-bar__sub {
     font-size: 0.72rem;
     color: var(--ink-soft);
-    letter-spacing: 0.04em;
+    letter-spacing: 0;
 }
 
 /* ── Setup ── */
@@ -146,10 +161,10 @@ label {
     font-size: 0.78rem;
     font-weight: 600;
     color: var(--ink-soft);
-    letter-spacing: 0.05em;
+    letter-spacing: 0;
 }
 
-input, textarea {
+input, textarea, select {
     width: 100%;
     padding: 0.75rem 0.9rem;
     margin-bottom: 1rem;
@@ -161,7 +176,15 @@ input, textarea {
     border-radius: 6px;
 }
 
-input:focus, textarea:focus {
+select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%), linear-gradient(135deg, var(--ink-soft) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+input:focus, textarea:focus, select:focus {
     outline: 2px solid var(--accent);
     outline-offset: 1px;
 }
@@ -187,7 +210,7 @@ button {
     padding: 0.85rem;
     font-size: 0.9rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0;
     color: #fff;
     background: var(--accent);
     border-radius: 6px;
@@ -217,7 +240,7 @@ button {
 .status-bar {
     padding: 0.75rem 1.25rem;
     border-bottom: 1px solid var(--paper-line);
-    background: #f5f2ec;
+    background: #eee6d7;
 }
 
 .mood-tag {
@@ -241,7 +264,7 @@ button {
     background: #fff;
     border: 1px solid var(--paper-line);
     padding: 0.2rem 0.55rem;
-    border-radius: 20px;
+    border-radius: 6px;
 }
 
 .pill b {
@@ -276,7 +299,7 @@ button {
 
 .log-entry--user {
     background: var(--user-bg);
-    border-left: 3px solid var(--accent);
+    border-left: 3px solid var(--forest);
     font-family: var(--font-sans);
     font-size: 0.92rem;
     font-style: italic;
@@ -310,7 +333,7 @@ button {
 .action-form {
     padding: 1rem 1.25rem 1.25rem;
     border-top: 1px solid var(--paper-line);
-    background: #f5f2ec;
+    background: #eee6d7;
 }
 
 .action-form textarea {

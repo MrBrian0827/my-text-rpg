@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>夜旅筆記</title>
+    <title>邊境委託所</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+TC:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
 
     <!-- 私人存取碼驗證 -->
     <section id="gate-panel" class="gate-view">
         <div class="gate-view__inner">
-            <h1>夜旅筆記</h1>
-            <p class="gate-lead">私人連載，請輸入存取碼。</p>
+            <h1>邊境委託所</h1>
+            <p class="gate-lead">私人遊戲桌，請輸入存取碼。</p>
             <form id="gate-form">
                 <label for="gate-code">存取碼</label>
                 <input type="password" id="gate-code" placeholder="你的私人密碼" autocomplete="off" required>
@@ -34,26 +34,40 @@
 
         <header class="top-bar">
             <div class="top-bar__title">
-                <h1>夜旅筆記</h1>
-                <span class="top-bar__sub">私人連載 · 僅供作者自用</span>
+                <h1>邊境委託所</h1>
+                <span class="top-bar__sub">黑暗奇幻文字 RPG · 私人遊戲桌</span>
             </div>
         </header>
 
         <section id="setup-panel" class="setup-view">
             <div class="setup-view__inner">
-                <p class="setup-lead">這是一本只屬於你的連載筆記。寫下世界與主角，AI 會以散文方式續寫——你再用自己的話決定下一步。</p>
+                <p class="setup-lead">成為邊境公會的新手冒險者，接下村莊、神殿與商隊送來的危險委託。你的每句行動都會推動判定、代價與結局。</p>
 
                 <label for="apiKey">Gemini API 金鑰</label>
                 <input type="password" id="apiKey" placeholder="AIzaSy…" autocomplete="off">
                 <p class="field-note">金鑰僅存於本次瀏覽器記憶體，不寫入 localStorage。<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">申請金鑰</a></p>
 
-                <label for="worldSetting">故事舞台</label>
-                <textarea id="worldSetting" rows="3" placeholder="時間、地點、氛圍……例如：雨季中的海港城市，燈火與迷霧交織。"></textarea>
+                <label for="playerName">冒險者姓名</label>
+                <input type="text" id="playerName" placeholder="例如：洛恩、米菈、灰燼">
 
-                <label for="playerClass">主角是誰</label>
-                <input type="text" id="playerClass" placeholder="例如：剛辭職的檔案管理員、四處寄信的旅人">
+                <label for="playerClass">職業</label>
+                <select id="playerClass">
+                    <option value="持盾戰士">持盾戰士</option>
+                    <option value="斥候">斥候</option>
+                    <option value="神官">神官</option>
+                    <option value="獵人">獵人</option>
+                    <option value="見習魔法師">見習魔法師</option>
+                </select>
 
-                <button type="button" class="btn-write" onclick="startAdventure()">寫下第一頁</button>
+                <label for="questStyle">第一份委託</label>
+                <select id="questStyle">
+                    <option value="村莊防衛">村莊防衛</option>
+                    <option value="洞穴偵查">洞穴偵查</option>
+                    <option value="失蹤調查">失蹤調查</option>
+                    <option value="商隊護送">商隊護送</option>
+                </select>
+
+                <button type="button" class="btn-write" onclick="startAdventure()">接受委託</button>
             </div>
         </section>
 
@@ -62,10 +76,10 @@
             <div class="status-bar">
                 <span class="mood-tag" id="mood-text">—</span>
                 <div class="status-pills">
-                    <span class="pill">精力 <b id="energy">—</b></span>
-                    <span class="pill">靈感 <b id="insight">—</b></span>
-                    <span class="pill">信譽 <b id="rapport">—</b></span>
-                    <span class="pill">積蓄 <b id="savings">—</b></span>
+                    <span class="pill">體力 <b id="energy">—</b></span>
+                    <span class="pill">警覺 <b id="insight">—</b></span>
+                    <span class="pill">聲望 <b id="rapport">—</b></span>
+                    <span class="pill">銀幣 <b id="savings">—</b></span>
                 </div>
             </div>
 
@@ -73,18 +87,18 @@
 
             <form id="action-form" class="action-form" onsubmit="submitAction(event)">
                 <label for="player-action" class="sr-only">你的下一步</label>
-                <textarea id="player-action" rows="2" placeholder="用一句話或一段話描述主角接下來想做什麼……" required></textarea>
-                <button type="submit" class="btn-write" id="submit-btn">續寫</button>
+                <textarea id="player-action" rows="2" placeholder="描述你的行動：偵查、交涉、埋伏、施法、撤退，或任何你想嘗試的做法……" required></textarea>
+                <button type="submit" class="btn-write" id="submit-btn">執行行動</button>
             </form>
 
         </section>
 
     </div>
 
-    <script src="js/config.js?v=9"></script>
-    <script src="js/gate.js?v=9"></script>
-    <script src="js/api.js?v=9"></script>
-    <script src="js/system.js?v=9"></script>
-    <script src="js/app.js?v=9"></script>
+    <script src="js/config.js?v=10"></script>
+    <script src="js/gate.js?v=10"></script>
+    <script src="js/api.js?v=10"></script>
+    <script src="js/system.js?v=10"></script>
+    <script src="js/app.js?v=10"></script>
 </body>
 </html>

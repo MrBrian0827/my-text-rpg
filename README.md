@@ -1,6 +1,6 @@
-# 夜旅筆記
+# 邊境委託所
 
-私人連載筆記工具。以 Gemini API 共同續寫原創故事，**僅供作者本人使用**。
+私人黑暗奇幻文字 RPG。登入後建立冒險者，接受邊境公會委託，透過 Gemini API 由 AI 擔任主持人，依你的自由文字行動推進任務、判定風險與代價。
 
 ---
 
@@ -36,11 +36,13 @@ Actions Secret 的價值是：**密碼不會被 commit 到 GitHub**，而不是�
 
 ### 1. 設定 GitHub Secret
 
-repo → **Settings → Secrets and variables → Actions → New repository secret**
+repo → **Settings → Secrets and variables → Actions → Secrets → New repository secret**
 
 | Name | Value |
 |------|-------|
 | `ACCESS_CODE` | 你的私人密碼（自訂，記得住即可） |
+
+請放在 **Secrets**，不要放在 Variables。Variables 較適合非敏感設定；登入密碼應使用 Secret。
 
 ### 2. 啟用 GitHub Pages（Actions 部署）
 
@@ -50,7 +52,7 @@ repo → **Settings → Secrets and variables → Actions → New repository sec
 
 ### 3. 各裝置加入書籤
 
-開啟 `https://你的帳號.github.io/倉庫名/` → 輸入存取碼 → 勾「記住此裝置」→ 加書籤。
+開啟 `https://你的帳號.github.io/倉庫名/` → 輸入存取碼 → 建立冒險者 → 加書籤。
 
 ---
 
@@ -76,6 +78,7 @@ npx serve .
 
 - 純靜態 HTML / CSS / JS
 - **API 金鑰**：僅存瀏覽器記憶體，不寫入 localStorage
+- **遊戲世界**：原創黑暗奇幻邊境，不使用既有商業作品的專有角色、地名或情節
 - 金鑰申請：[Google AI Studio](https://aistudio.google.com/apikey)
 
 ```

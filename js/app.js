@@ -2,8 +2,9 @@ let sessionApiKey = '';
 
 async function startAdventure() {
     const apiKey = document.getElementById('apiKey').value.trim();
-    const world = document.getElementById('worldSetting').value.trim() || '一座尚未被說完的城市';
-    const protagonist = document.getElementById('playerClass').value.trim() || '無名旅人';
+    const playerName = document.getElementById('playerName').value.trim() || '無名者';
+    const playerClass = document.getElementById('playerClass').value;
+    const questStyle = document.getElementById('questStyle').value;
 
     if (!apiKey) { alert('請先輸入 API 金鑰'); return; }
 
@@ -17,8 +18,10 @@ async function startAdventure() {
     currentMood = '';
 
     const firstPrompt =
-        `故事舞台：【${world}】。主角：【${protagonist}】。` +
-        `請寫下開場第一段連載，並在 change 欄位填入合理的初始數值（作為起點，非增減）。`;
+        `玩家角色：【${playerName}】，職業：【${playerClass}】。` +
+        `第一份委託類型：【${questStyle}】。` +
+        `請以主持人身分建立開場場景，讓玩家已經抵達邊境公會或委託地附近。` +
+        `第一回合的 change 欄位請填入合理初始數值（作為起點，非增減）。`;
 
     chatHistory = [{ role: 'user', parts: [{ text: firstPrompt }] }];
 
@@ -37,12 +40,12 @@ async function submitAction(event) {
     appendLog('user', action);
 
     const statusNote =
-        `（當前：精力 ${playerStatus.energy}、靈感 ${playerStatus.insight}、` +
-        `信譽 ${playerStatus.rapport}、積蓄 ${playerStatus.savings}）`;
+        `（當前：體力 ${playerStatus.energy}、警覺 ${playerStatus.insight}、` +
+        `聲望 ${playerStatus.rapport}、銀幣 ${playerStatus.savings}）`;
 
     chatHistory.push({
         role: 'user',
-        parts: [{ text: `主角的行動：【${action}】${statusNote}。請續寫下一段。` }],
+        parts: [{ text: `玩家宣告行動：【${action}】${statusNote}。請判定行動結果並推進下一段。` }],
     });
 
     renderLoading();
@@ -82,10 +85,10 @@ async function processTurn(apiKey, isFirstTurn) {
         if (loading?.textContent === '正在續寫……') loading.remove();
 
         if (playerStatus.energy <= 0) {
-            appendLog('end', `${data.entry}\n\n—— 故事在此告一段落。`);
+            appendLog('end', `${data.entry}\n\n任務失敗，冒險者被迫退出這次委託。`);
             setFormEnabled(false);
             const form = document.getElementById('action-form');
-            form.innerHTML = '<button type="button" class="btn-restart" onclick="location.reload()">開啟新故事</button>';
+            form.innerHTML = '<button type="button" class="btn-restart" onclick="location.reload()">重新建立角色</button>';
             return;
         }
 

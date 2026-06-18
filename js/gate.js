@@ -1,4 +1,4 @@
-const UNLOCK_KEY = 'nightway-unlocked';
+const UNLOCK_KEY = 'frontier-rpg-unlocked-v1';
 
 function isUnlocked() {
     return sessionStorage.getItem(UNLOCK_KEY) === '1'
