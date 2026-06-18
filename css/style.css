@@ -82,19 +82,10 @@ body {
     text-align: center;
 }
 
-.gate-remember {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.gate-note {
     margin: -0.5rem 0 1rem;
     font-size: 0.82rem;
     color: var(--ink-soft);
-    cursor: pointer;
-}
-
-.gate-remember input {
-    width: auto;
-    margin: 0;
 }
 
 .gate-error {

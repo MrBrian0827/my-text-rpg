@@ -1,4 +1,5 @@
 const UNLOCK_KEY = 'frontier-rpg-unlocked-v1';
+const LEGACY_UNLOCK_KEYS = ['nightway-unlocked', UNLOCK_KEY];
 
 function normalizeCode(value) {
     return String(value ?? '')
@@ -8,8 +9,13 @@ function normalizeCode(value) {
 }
 
 function isUnlocked() {
-    return sessionStorage.getItem(UNLOCK_KEY) === '1'
-        || localStorage.getItem(UNLOCK_KEY) === '1';
+    return sessionStorage.getItem(UNLOCK_KEY) === '1';
+}
+
+function clearRememberedUnlocks() {
+    for (const key of LEGACY_UNLOCK_KEYS) {
+        localStorage.removeItem(key);
+    }
 }
 
 function showApp() {
@@ -68,12 +74,10 @@ function handleUnlock(event) {
     }
 
     const input = document.getElementById('gate-code');
-    const remember = document.getElementById('gate-remember').checked;
     const code = normalizeCode(input.value);
 
     if (code === stored) {
         sessionStorage.setItem(UNLOCK_KEY, '1');
-        if (remember) localStorage.setItem(UNLOCK_KEY, '1');
         showApp();
         return;
     }
@@ -84,6 +88,8 @@ function handleUnlock(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    clearRememberedUnlocks();
+
     const form = document.querySelector('#gate-panel form');
     if (form) form.addEventListener('submit', handleUnlock);
 

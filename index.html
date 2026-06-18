@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+TC:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=12">
+    <link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 
@@ -20,10 +20,7 @@
             <form id="gate-form">
                 <label for="gate-code">存取碼</label>
                 <input type="password" id="gate-code" placeholder="你的私人密碼" autocomplete="off" required>
-                <label class="gate-remember">
-                    <input type="checkbox" id="gate-remember" checked>
-                    記住此裝置（下次免輸入）
-                </label>
+                <p class="gate-note">不會記住此裝置；關閉分頁後需重新輸入。</p>
                 <p id="gate-error" class="gate-error" hidden></p>
                 <button type="submit" class="btn-write">進入</button>
             </form>
@@ -103,10 +100,10 @@
 
     </div>
 
-    <script src="js/config.js?v=12"></script>
-    <script src="js/gate.js?v=12"></script>
-    <script src="js/api.js?v=12"></script>
-    <script src="js/system.js?v=12"></script>
-    <script src="js/app.js?v=12"></script>
+    <script src="js/config.js?v=13"></script>
+    <script src="js/gate.js?v=13"></script>
+    <script src="js/api.js?v=13"></script>
+    <script src="js/system.js?v=13"></script>
+    <script src="js/app.js?v=13"></script>
 </body>
 </html>
