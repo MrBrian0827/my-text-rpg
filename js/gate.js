@@ -1,5 +1,12 @@
 const UNLOCK_KEY = 'frontier-rpg-unlocked-v1';
 
+function normalizeCode(value) {
+    return String(value ?? '')
+        .normalize('NFKC')
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+        .trim();
+}
+
 function isUnlocked() {
     return sessionStorage.getItem(UNLOCK_KEY) === '1'
         || localStorage.getItem(UNLOCK_KEY) === '1';
@@ -18,7 +25,37 @@ function showGateError(msg) {
 
 function getAccessCode() {
     if (typeof ACCESS_CODE === 'undefined') return null;
-    return String(ACCESS_CODE).trim();
+    return normalizeCode(ACCESS_CODE);
+}
+
+function getConfigMeta() {
+    if (typeof ACCESS_CODE_META === 'undefined') return null;
+    return ACCESS_CODE_META;
+}
+
+function formatConfigTime(value) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return date.toLocaleString('zh-TW', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+}
+
+function showWrongCodeError() {
+    const meta = getConfigMeta();
+    const deployedAt = formatConfigTime(meta?.generatedAt);
+    const deployHint = deployedAt
+        ? `目前頁面載入的是 ${deployedAt} 產生的設定檔。`
+        : '如果你剛更新 GitHub Secret，Secret 不會自動重新部署。';
+
+    showGateError(
+        `存取碼錯誤，請再試一次。${deployHint}請到 GitHub Actions 重新執行部署，完成後按 Ctrl+Shift+R 強制重新整理。`
+    );
 }
 
 function handleUnlock(event) {
@@ -32,7 +69,7 @@ function handleUnlock(event) {
 
     const input = document.getElementById('gate-code');
     const remember = document.getElementById('gate-remember').checked;
-    const code = input.value.trim();
+    const code = normalizeCode(input.value);
 
     if (code === stored) {
         sessionStorage.setItem(UNLOCK_KEY, '1');
@@ -41,7 +78,7 @@ function handleUnlock(event) {
         return;
     }
 
-    showGateError('存取碼錯誤，請再試一次');
+    showWrongCodeError();
     input.value = '';
     input.focus();
 }

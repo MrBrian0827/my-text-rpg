@@ -50,6 +50,15 @@ repo → **Settings → Secrets and variables → Actions → Secrets → New re
 2. **Source** 選 **GitHub Actions**（不是 Deploy from branch）
 3. push 到 `main` 分支，Actions 會自動部署
 
+### 2.1 更新存取碼後重新部署
+
+只改 `ACCESS_CODE` Secret 不會自動觸發 GitHub Pages 重新部署。更新密碼後請做其中一件事：
+
+1. 到 **Actions → Deploy to GitHub Pages → Run workflow** 手動執行一次
+2. 或 push 任意新 commit 到 `main`
+
+部署完成後，在瀏覽器按 **Ctrl+Shift+R** 強制重新整理，避免讀到舊的 `config.js`。
+
 ### 3. 各裝置加入書籤
 
 開啟 `https://你的帳號.github.io/倉庫名/` → 輸入存取碼 → 建立冒險者 → 加書籤。
