@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+TC:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=11">
+    <link rel="stylesheet" href="css/style.css?v=12">
 </head>
 <body>
 
@@ -37,6 +37,10 @@
                 <h1>邊境委託所</h1>
                 <span class="top-bar__sub">黑暗奇幻文字 RPG · 私人遊戲桌</span>
             </div>
+            <div class="save-actions">
+                <button type="button" class="btn-utility" id="download-save-btn" onclick="downloadSave()" disabled>下載存檔</button>
+                <button type="button" class="btn-utility" onclick="openSavePicker()">載入存檔</button>
+            </div>
         </header>
 
         <section id="setup-panel" class="setup-view">
@@ -45,7 +49,7 @@
 
                 <label for="apiKey">Gemini API 金鑰</label>
                 <input type="password" id="apiKey" placeholder="AIzaSy…" autocomplete="off">
-                <p class="field-note">金鑰僅存於本次瀏覽器記憶體，不寫入 localStorage。<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">申請金鑰</a></p>
+                <p class="field-note">新遊戲時金鑰僅存於本次瀏覽器記憶體；若下載存檔，存檔會包含 API key，請勿分享給任何人。若要避免任何費用，請使用未連結付費帳單的免費層 key。<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">申請金鑰</a></p>
 
                 <label for="playerName">冒險者姓名</label>
                 <input type="text" id="playerName" placeholder="例如：洛恩、米菈、灰燼">
@@ -68,8 +72,12 @@
                 </select>
 
                 <button type="button" class="btn-write" onclick="startAdventure()">接受委託</button>
+                <button type="button" class="btn-secondary" onclick="openSavePicker()">載入存檔繼續</button>
+                <p class="field-note save-warning">載入存檔會讀取檔案中的 API key 與遊戲進度；檔案只會在你的裝置上被選取，不會上傳到 GitHub。</p>
             </div>
         </section>
+
+        <input type="file" id="save-file-input" accept="application/json,.json" hidden>
 
         <section id="game-panel" class="journal-view" hidden>
 
@@ -95,10 +103,10 @@
 
     </div>
 
-    <script src="js/config.js?v=11"></script>
-    <script src="js/gate.js?v=11"></script>
-    <script src="js/api.js?v=11"></script>
-    <script src="js/system.js?v=11"></script>
-    <script src="js/app.js?v=11"></script>
+    <script src="js/config.js?v=12"></script>
+    <script src="js/gate.js?v=12"></script>
+    <script src="js/api.js?v=12"></script>
+    <script src="js/system.js?v=12"></script>
+    <script src="js/app.js?v=12"></script>
 </body>
 </html>

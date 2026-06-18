@@ -119,6 +119,10 @@ body {
     padding: 1.25rem 1.5rem 1rem;
     border-bottom: 1px solid var(--paper-line);
     background: var(--paper-strong);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 .top-bar h1 {
@@ -133,6 +137,13 @@ body {
     font-size: 0.72rem;
     color: var(--ink-soft);
     letter-spacing: 0;
+}
+
+.save-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 /* ── Setup ── */
@@ -197,6 +208,10 @@ input:focus, textarea:focus, select:focus {
 
 .field-note a { color: var(--accent); }
 
+.save-warning {
+    margin-top: 0.75rem;
+}
+
 /* ── Buttons ── */
 
 button {
@@ -219,6 +234,32 @@ button {
 
 .btn-write:hover:not(:disabled) { background: var(--accent-hover); }
 .btn-write:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary,
+.btn-utility {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid var(--paper-line);
+    border-radius: 6px;
+}
+
+.btn-secondary {
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.btn-utility:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.btn-secondary:hover:not(:disabled),
+.btn-utility:hover:not(:disabled) {
+    border-color: var(--accent);
+}
 
 .btn-restart {
     padding: 0.7rem 1.2rem;
@@ -343,7 +384,17 @@ button {
 }
 
 @media (max-width: 500px) {
-    .top-bar { padding: 1rem; }
+    .top-bar {
+        padding: 1rem;
+        display: block;
+    }
+    .save-actions {
+        justify-content: stretch;
+        margin-top: 0.75rem;
+    }
+    .btn-utility {
+        flex: 1 1 8rem;
+    }
     .narrative-log { padding: 1rem; }
     .status-pills { gap: 0.35rem; }
 }

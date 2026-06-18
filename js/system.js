@@ -2,6 +2,7 @@
 let chatHistory = [];
 let playerStatus = { energy: 0, insight: 0, rapport: 0, savings: 0 };
 let currentMood = '';
+let gameLog = [];
 
 // 黑暗奇幻文字 RPG 主持指令
 const GAME_SYSTEM_INSTRUCTION = `
@@ -42,13 +43,51 @@ function updateUI() {
     document.getElementById('mood-text').innerText = currentMood || '—';
 }
 
-function appendLog(type, text) {
+function clearLog() {
+    gameLog = [];
+    document.getElementById('narrative-log').innerHTML = '';
+}
+
+function appendLog(type, text, record = true) {
     const log = document.getElementById('narrative-log');
     const el = document.createElement('div');
     el.className = `log-entry log-entry--${type}`;
     el.textContent = text;
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
+
+    if (record) {
+        gameLog.push({
+            type,
+            text,
+            createdAt: new Date().toISOString(),
+        });
+    }
+}
+
+function restoreLog(entries) {
+    gameLog = [];
+    document.getElementById('narrative-log').innerHTML = '';
+    for (const entry of entries || []) {
+        if (!entry?.type || typeof entry.text !== 'string') continue;
+        appendLog(entry.type, entry.text, false);
+        gameLog.push({
+            type: entry.type,
+            text: entry.text,
+            createdAt: entry.createdAt || new Date().toISOString(),
+        });
+    }
+}
+
+function removeLastSystemLog(text) {
+    const log = document.getElementById('narrative-log');
+    const loading = log.querySelector('.log-entry--system:last-child');
+    if (loading?.textContent === text) loading.remove();
+
+    const last = gameLog.at(-1);
+    if (last?.type === 'system' && last.text === text) {
+        gameLog.pop();
+    }
 }
 
 function setFormEnabled(enabled) {

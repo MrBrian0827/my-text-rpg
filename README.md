@@ -65,6 +65,36 @@ repo → **Settings → Secrets and variables → Actions → Secrets → New re
 
 ---
 
+## 存檔與 API key
+
+遊戲支援下載 / 載入 JSON 存檔，方便跨平台遊玩。
+
+存檔內容包含：
+
+- 角色狀態
+- 遊戲敘事紀錄
+- Gemini 對話上下文
+- Gemini API key
+
+存檔只會由瀏覽器下載到你的裝置，不會上傳到 GitHub。  
+但因為檔案內含 API key，**請不要把存檔傳給別人或放到公開雲端空間**。
+
+---
+
+## 免費使用提醒
+
+本專案本身是純靜態網頁，不收費、不內建任何付費服務，也沒有伺服器端儲存。
+
+但 Gemini API 是否產生費用取決於你的 Google AI Studio / Google Cloud 專案設定：
+
+- 若使用免費層且未啟用付費帳單，達到額度後遊戲會停止並提示等待重置。
+- 若你的專案已啟用付費帳單，Google 可能依官方價格與用量計費。
+- 為避免任何費用，請使用未連結付費帳單的專用免費層 API key。
+
+遊戲沒有啟用 Google Search、Maps、Code Execution、Context Caching 等工具功能，避免額外工具費用。
+
+---
+
 ## 本機測試（選用）
 
 ```bash
